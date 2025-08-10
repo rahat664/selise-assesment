@@ -70,26 +70,38 @@ The **Studio Booking Application** is a modern, responsive Angular web app desig
 
 ---
 
-## Folder Structure (Sample)
-src/
-├─ app/
-│    ├─ pages/
-│    │    ├─ booking-list
-│    ├─ studio/
-│    │    ├─ components/
-│    │    │    ├─ amenities-list
-│    │    │    ├─ booking-modal
-│    │    │    ├─ rating-stars
-│    │    │    ├─ search-bar
-│    │    │    ├─ studio-card
-│    │    │    └─ studio-list
-│    │    ├─ studio.component.html
-│    │    ├─ studio.component.scss
-│    │    └─ studio.component.ts
-│    ├─ services/
-│    │    └─ mock-data.service.ts
-└─ assets/
-└─ db.json
+
+## Description
+
+- **src/app/pages/booking-list/**  
+  Contains the booking list page related components and modules.
+
+- **src/app/studio/components/**  
+  Contains reusable components related to the studio feature, such as:
+  - Amenities List
+  - Booking Modal
+  - Rating Stars
+  - Search Bar
+  - Studio Card
+  - Studio List
+
+- **src/app/studio/**  
+  Contains the main studio feature files: the HTML template, styles, and TypeScript logic.
+
+- **src/app/services/**  
+  Contains service files, for example, a mock data service for simulating backend data.
+
+- **assets/**  
+  Contains static assets like images, fonts, icons, etc.
+
+- **db.json**  
+  A local JSON database file used for mock data or local development.
+
+---
+
+This structure helps keep the code modular, organized, and easy to navigate.
+
+
 
 
 ---
