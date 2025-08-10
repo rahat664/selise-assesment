@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {timer} from 'rxjs';
 
@@ -7,7 +7,8 @@ import {timer} from 'rxjs';
   selector: 'app-booking-modal',
   imports: [
     FormsModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './booking-modal.component.html',
   styleUrl: './booking-modal.component.scss'
@@ -16,22 +17,27 @@ export class BookingModalComponent {
   @Input() studio: any | null = null;
   @Output() close = new EventEmitter<void>();
 
-  bookingDate: string = '';
-  bookingTimeSlot: string = '';
-  userName: string = '';
-  userEmail: string = '';
+  bookingForm!: FormGroup;
   errorMessage = '';
   successMessage = '';
+  minDate = new Date().toISOString().split('T')[0]; // today's date
 
-  minDate = new Date().toISOString().split('T')[0]; // today's date in YYYY-MM-DD
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.bookingForm = this.fb.group({
+      bookingDate: ['', Validators.required],
+      bookingTimeSlot: ['', Validators.required],
+      userName: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+    });
+  }
 
   get availableTimeSlots(): string[] {
     if (!this.studio) return [];
     const openHour = parseInt(this.studio.Availability.Open.split(':')[0], 10);
     const closeHour = parseInt(this.studio.Availability.Close.split(':')[0], 10);
-
-    // Example: generate 1-hour slots between open and close (like "09:00 - 10:00")
-    const slots = [];
+    const slots: string[] = [];
     for (let hour = openHour; hour < closeHour; hour++) {
       const start = hour.toString().padStart(2, '0') + ':00';
       const end = (hour + 1).toString().padStart(2, '0') + ':00';
@@ -44,21 +50,21 @@ export class BookingModalComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.bookingDate || !this.bookingTimeSlot || !this.userName || !this.userEmail) {
-      this.errorMessage = 'Please fill all fields.';
+    if (this.bookingForm.invalid) {
+      this.bookingForm.markAllAsTouched()
+      this.errorMessage = 'Please fill all fields correctly.';
       return;
     }
 
+    const bookingData = this.bookingForm.value;
     const bookingKey = 'studio_bookings';
-
-    // Load existing bookings from localStorage
     const bookings: any[] = JSON.parse(localStorage.getItem(bookingKey) || '[]');
 
-    // Check if the studio, date, and time slot is already booked
-    const isBooked = bookings.some(b =>
-      b.studioId === this.studio.Id &&
-      b.date === this.bookingDate &&
-      b.timeSlot === this.bookingTimeSlot
+    const isBooked = bookings.some(
+      b =>
+        b.studioId === this.studio.Id &&
+        b.date === bookingData.bookingDate &&
+        b.timeSlot === bookingData.bookingTimeSlot
     );
 
     if (isBooked) {
@@ -66,31 +72,22 @@ export class BookingModalComponent {
       return;
     }
 
-    // Save booking
     bookings.push({
       studioId: this.studio.Id,
       studioName: this.studio.Name,
-      studioType: this.studio.Type,       // add this
-      studioCity: this.studio.Location.City,  // add this
-      studioArea: this.studio.Location.Area,  // add this
-      date: this.bookingDate,
-      timeSlot: this.bookingTimeSlot,
-      userName: this.userName,
-      userEmail: this.userEmail,
+      studioType: this.studio.Type,
+      studioCity: this.studio.Location.City,
+      studioArea: this.studio.Location.Area,
+      date: bookingData.bookingDate,
+      timeSlot: bookingData.bookingTimeSlot,
+      userName: bookingData.userName,
+      userEmail: bookingData.userEmail,
     });
 
     localStorage.setItem(bookingKey, JSON.stringify(bookings));
+    this.successMessage = `Booking confirmed for ${bookingData.bookingDate} at ${bookingData.bookingTimeSlot}. Thank you, ${bookingData.userName}!`;
 
-    this.successMessage = `Booking confirmed for ${this.bookingDate} at ${this.bookingTimeSlot}. Thank you, ${this.userName}!`;
-
-    // Optionally reset form or close modal after success
-    this.bookingDate = '';
-    this.bookingTimeSlot = '';
-    this.userName = '';
-    this.userEmail = '';
-    // Emit close event to parent component
-    timer(2000).subscribe(() => {
-      this.close.emit();
-    })
+    this.bookingForm.reset();
+    timer(2000).subscribe(() => this.close.emit());
   }
 }
