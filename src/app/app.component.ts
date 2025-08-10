@@ -6,7 +6,7 @@ import {StudioComponent} from './pages/studio/studio.component';
 
 @Component({
   selector: 'app-root',
-  imports: [StudioComponent, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [ RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
