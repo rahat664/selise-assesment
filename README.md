@@ -131,7 +131,7 @@ This structure helps keep the code modular, organized, and easy to navigate.
 ## Live Demo
 
 You can try the live version here:  
-[Studio Booking App](https://studio-boooking-bpjktfqxi-rahat-kabirs-projects.vercel.app/studios)
+[Studio Booking App](https://studio-boooking.vercel.app/studios)
 
 ---
 
