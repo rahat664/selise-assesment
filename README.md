@@ -1,59 +1,129 @@
-# StudioBoooking
+# Studio Booking Application Documentation
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
+## Overview
 
-## Development server
+The **Studio Booking Application** is a modern, responsive Angular web app designed to help users search, browse, and book studios conveniently. It integrates a mock API with localStorage-based booking persistence, a smooth UI built with Tailwind CSS, and several user-friendly features including search by location and radius, booking management, and availability checking.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 1. Studio List Page
 
-## Code scaffolding
+- Displays a comprehensive list of studios available for booking.
+- Each studio card shows key details:
+  - Studio Name
+  - Type (e.g., Recording Studio, Music Studio)
+  - Location details (City, Area, Address)
+  - Amenities list
+  - Price per hour with currency
+  - Rating (1-5 stars)
+- Includes a “Book Now” button on each studio card to initiate the booking process.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 2. Search Functionality
 
-```bash
-ng generate component component-name
-```
+- **Search by Place (Area/City):**
+  - A search bar with autocomplete functionality that dynamically filters studios as the user types.
+  - Suggests location references to help quick selection.
+- **Search by Radius:**
+  - Users can search for studios within a selectable radius (5km, 10km, 20km, 50km) based on their current geolocation.
+  - Handles permission denial and error states gracefully.
+  - Displays informative messages when no studios are found within the radius.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 3. Booking Modal and Availability
 
-```bash
-ng generate --help
-```
+- Clicking “Book Now” opens a modal popup form collecting:
+  - Date selection (Date picker)
+  - Time slot selection (dynamically generated from studio’s open/close hours)
+  - User information (Name and Email)
+- Checks existing bookings in localStorage to prevent double bookings on the same time slot.
+- Displays error messages for unavailable time slots.
+- On successful booking:
+  - Confirms booking details via success message.
+  - Saves booking information (studio details, user info, date, time) in browser localStorage.
 
-## Building
+### 4. Booking List Page
 
-To build the project run:
+- Displays all current bookings stored in localStorage.
+- Shows:
+  - User name and email
+  - Studio type
+  - Studio location (City, Area)
+  - Date and time slot of booking
+- Provides a clear, responsive list layout for easy review.
 
-```bash
-ng build
-```
+### 5. Responsive Navigation Bar
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Tailwind CSS styled navigation bar with links to Studio List and Booking List pages.
+- Highlights active routes.
+- Responsive and visually appealing.
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Technologies Used
 
-```bash
-ng test
-```
+- **Angular** with Standalone Components for modular, efficient architecture.
+- **Tailwind CSS** for utility-first responsive styling.
+- **Angular In-Memory Web API** to mock backend API with JSON data.
+- **LocalStorage** to persist booking data on the client side.
+- **Geolocation API** for radius-based searches using user’s current location.
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## Folder Structure (Sample)
+src/
+├─ app/
+│    ├─ pages/
+│    │    ├─ booking-list
+│    ├─ studio/
+│    │    ├─ components/
+│    │    │    ├─ amenities-list
+│    │    │    ├─ booking-modal
+│    │    │    ├─ rating-stars
+│    │    │    ├─ search-bar
+│    │    │    ├─ studio-card
+│    │    │    └─ studio-list
+│    │    ├─ studio.component.html
+│    │    ├─ studio.component.scss
+│    │    └─ studio.component.ts
+│    ├─ services/
+│    │    └─ mock-data.service.ts
+└─ assets/
+└─ db.json
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## How It Works — High Level
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. **Mock API** serves studios data from a local JSON file via Angular In-Memory Web API.
+2. **Studio List Page** fetches and displays studios, allows searching by place or radius.
+3. **Booking modal** collects user booking info and validates availability.
+4. **Bookings stored in localStorage** for persistence.
+5. **Booking List Page** reads bookings from localStorage and displays them.
+6. Responsive navigation allows smooth navigation between pages.
+
+---
+
+## Next Steps / Possible Enhancements
+
+- Add backend API integration for real data persistence.
+- Implement user authentication for personalized bookings.
+- Add booking cancellation and modification features.
+- Improve time slot granularity (e.g., 30 minutes intervals).
+- Add email notifications or confirmations.
+- Mobile-friendly hamburger menu and UI optimizations.
+
+---
+
+## Live Demo
+
+You can try the live version here:  
+[Studio Booking App](https://studio-boooking-bpjktfqxi-rahat-kabirs-projects.vercel.app/studios)
+
+---
+
+## Contact
+
+For any questions or contributions, feel free to reach out to Rahat Kabir.
+
